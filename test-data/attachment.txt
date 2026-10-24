@@ -1,0 +1,3 @@
+Proton Mail Automation Assessment - attachment fixture.
+This file is uploaded, sent and verified by ATT-001.
+Plain ASCII content, well under 1 KB, safe for any mail scanner.

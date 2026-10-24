@@ -1,0 +1,39 @@
+{
+  "name": "proton-mail-automation",
+  "version": "1.0.0",
+  "description": "Playwright + TypeScript regression suite for Proton Mail Web (Automation QA assessment)",
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test",
+    "test:p0": "playwright test --grep @P0",
+    "test:headed": "playwright test --headed --workers=1",
+    "test:debug": "playwright test --debug",
+    "test:chromium": "cross-env BROWSER=chromium playwright test",
+    "test:all-browsers": "cross-env BROWSER=all playwright test",
+    "report": "playwright show-report reports/html",
+    "testcases:build": "node scripts/build-test-cases.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:allure": "node scripts/run-with-allure.mjs",
+    "allure:generate": "allure generate reports/allure-results --clean -o reports/allure-report",
+    "allure:open": "allure open reports/allure-report"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.9.0",
+    "allure-commandline": "2.46.1",
+    "allure-js-commons": "3.12.2",
+    "allure-playwright": "3.12.2",
+    "cross-env": "7.0.3",
+    "dotenv": "16.4.5",
+    "exceljs": "4.4.0",
+    "typescript": "5.6.3"
+  },
+  "engines": {
+    "node": ">=18.18"
+  },
+  "private": true
+}

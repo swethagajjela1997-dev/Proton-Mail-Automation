@@ -1,0 +1,918 @@
+{
+  "commonPreconditions": {
+    "A": "Account A (sender) exists, 2FA disabled, English UI, credentials in .env",
+    "B": "Account B (receiver) exists, 2FA disabled, English UI, credentials in .env",
+    "OUT": "User is signed out (empty browser storage)",
+    "PUB": "No account needed; public page https://proton.me/mail reachable"
+  },
+  "testCases": [
+    {
+      "id": "LAND-001",
+      "feature": "Landing page",
+      "scenario": "Hero presents the privacy value proposition, trust signals and both acquisition paths",
+      "priority": "P0",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open https://proton.me/mail"
+      ],
+      "expected": "Page served (< 400); title contains \"Proton Mail\"; H1 \"Secure email that protects your privacy\"; value proposition (encrypted, Switzerland); trust signals (100 million users, app rating, recommended by experts); \"Create a free account\" and \"Get Mail for Business\" visible",
+      "classification": "Automate",
+      "reason": "First impression and conversion point for every visitor; a broken hero blocks all acquisition",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-002",
+      "feature": "Landing page",
+      "scenario": "\"Create a free account\" starts the free sign-up flow",
+      "priority": "P0",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open https://proton.me/mail",
+        "Click \"Create a free account\" (nothing is entered)"
+      ],
+      "expected": "Proton account sign-up page opens",
+      "classification": "Automate",
+      "reason": "Main acquisition funnel; checked without creating accounts",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-003",
+      "feature": "Landing page",
+      "scenario": "Returning user reaches the sign-in form from the page header",
+      "priority": "P0",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open https://proton.me/mail (desktop)",
+        "Click \"Sign in\""
+      ],
+      "expected": "account.proton.me sign-in with username, password and enabled \"Sign in\" button",
+      "classification": "Automate",
+      "reason": "Only public path into the mailbox; links the public page to the AUTH-* tests",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-004",
+      "feature": "Landing page",
+      "scenario": "Plans offer Proton Unlimited, a recommended Mail Plus and a free plan without credit card",
+      "priority": "P1",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open https://proton.me/mail",
+        "Scroll to \"Proton Mail plans for your privacy\""
+      ],
+      "expected": "Cards for Proton Unlimited, Mail Plus, Proton Free, each with its CTA; Free shows 0.00 and \"No credit card required\"; Mail Plus marked Recommended",
+      "classification": "Automate",
+      "reason": "Revenue-relevant content; asserts structure and rules, not exact prices (region/promotion dependent)",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-005",
+      "feature": "Landing page",
+      "scenario": "Switching billing period re-prices Mail Plus and restores the yearly price",
+      "priority": "P1",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open plans",
+        "Select \"12 months\", read Mail Plus price",
+        "Select \"1 month\"",
+        "Select \"12 months\" again"
+      ],
+      "expected": "12 months shows \"every 12 months\" billing note; 1 month shows a different price without it; switching back restores the yearly price",
+      "classification": "Automate",
+      "reason": "State transition on pricing, both directions; wrong prices are a business and legal risk",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-006",
+      "feature": "Landing page",
+      "scenario": "Choosing Mail Plus leads to sign-up / checkout for that plan",
+      "priority": "P1",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open plans",
+        "Click \"Get Mail Plus\" (nothing is entered)"
+      ],
+      "expected": "Proton account sign-up / checkout opens for the paid plan",
+      "classification": "Automate",
+      "reason": "Paid conversion funnel entry point",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-007",
+      "feature": "Landing page",
+      "scenario": "Changing currency re-prices the plans",
+      "priority": "P2",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open plans",
+        "Change currency from USD to EUR"
+      ],
+      "expected": "Selector shows EUR; plan prices shown in euro",
+      "classification": "Automate",
+      "reason": "International customers; currency state must propagate to all prices",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-008",
+      "feature": "Landing page",
+      "scenario": "\"Get Mail for Business\" leads to the business offering",
+      "priority": "P1",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open https://proton.me/mail",
+        "Click \"Get Mail for Business\""
+      ],
+      "expected": "Business page opens",
+      "classification": "Automate",
+      "reason": "B2B acquisition funnel",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-009",
+      "feature": "Landing page",
+      "scenario": "FAQ lists all six questions; answers expand and collapse",
+      "priority": "P2",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Scroll to \"Proton Mail FAQ\"",
+        "Expand \"Is Proton Mail free?\"",
+        "Collapse it"
+      ],
+      "expected": "Six questions listed; the answer expands, then collapses",
+      "classification": "Automate",
+      "reason": "Self-service information that reduces support load; interaction state is verifiable",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-010",
+      "feature": "Landing page",
+      "scenario": "Footer exposes legal links, company identity, language selector and current copyright",
+      "priority": "P2",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open https://proton.me/mail",
+        "Inspect footer"
+      ],
+      "expected": "Privacy Policy and Terms & conditions link to legal pages; Proton AG, Geneva, Switzerland; language selector; \"© <current year> Proton AG\"",
+      "classification": "Automate",
+      "reason": "Legal/compliance obligations; stale copyright or broken legal links are visible quality issues",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-011",
+      "feature": "Landing page",
+      "scenario": "Phone layout: menu reveals Sign in, hero usable, no horizontal scrolling",
+      "priority": "P2",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open https://proton.me/mail on a phone profile",
+        "Open the menu"
+      ],
+      "expected": "H1 in viewport, \"Create a free account\" visible, page fits the width; menu shows \"Sign in\"",
+      "classification": "Automate",
+      "reason": "Large share of visitors are mobile; layout-level checks are stable",
+      "automatedTest": "tests/landing/landing.spec.ts"
+    },
+    {
+      "id": "LAND-012",
+      "feature": "Landing page",
+      "scenario": "Feature carousel, imagery and visual design",
+      "priority": "P3",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Review sections and carousel on desktop and phone"
+      ],
+      "expected": "Content readable, carousel navigates, images load",
+      "classification": "Not worth automating",
+      "reason": "Marketing visuals change often; pixel/visual assertions would be brittle and low value",
+      "automatedTest": "-"
+    },
+    {
+      "id": "LAND-013",
+      "feature": "Landing page",
+      "scenario": "Page health: no console errors or failed first-party requests",
+      "priority": "P3",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Open https://proton.me/mail with console/network listeners"
+      ],
+      "expected": "No console errors; no proton.me request >= 400",
+      "classification": "Automate",
+      "reason": "Backlog: needs an allow-list for third-party noise before it is reliable",
+      "automatedTest": "-"
+    },
+    {
+      "id": "LAND-014",
+      "feature": "Landing page",
+      "scenario": "Page in other languages via the language selector",
+      "priority": "P3",
+      "preconditions": "PUB",
+      "testData": "No account; nothing submitted",
+      "steps": [
+        "Switch language in the footer"
+      ],
+      "expected": "Page content and links localised",
+      "classification": "Manual / Exploratory",
+      "reason": "Translation quality needs human review",
+      "automatedTest": "-"
+    },
+    {
+      "id": "AUTH-001",
+      "feature": "Authentication",
+      "scenario": "Valid credentials open the mailbox; session survives a page reload",
+      "priority": "P0",
+      "preconditions": "OUT; A",
+      "testData": "Account A credentials from .env",
+      "steps": [
+        "Open https://mail.proton.me (redirects to sign-in)",
+        "Enter valid username and password, tick 'Keep me signed in'",
+        "Click Sign in",
+        "Reload the page"
+      ],
+      "expected": "Inbox (/u/<n>/inbox) is shown with the Compose button; after reload the user is still signed in and not redirected to sign-in",
+      "classification": "Automate",
+      "reason": "Gatekeeper for every other journey; stable and cheap",
+      "automatedTest": "tests/authentication/authentication.spec.ts"
+    },
+    {
+      "id": "AUTH-002",
+      "feature": "Authentication",
+      "scenario": "Invalid credentials are rejected",
+      "priority": "P0",
+      "preconditions": "OUT",
+      "testData": "Non-existent user + wrong password (test-data/testData.json)",
+      "steps": [
+        "Open sign-in",
+        "Enter unknown username and wrong password",
+        "Click Sign in"
+      ],
+      "expected": "'Incorrect login credentials' error; user stays on the sign-in form; no mailbox URL reached",
+      "classification": "Automate",
+      "reason": "Security-relevant negative path; deterministic; needs no account",
+      "automatedTest": "tests/authentication/authentication.spec.ts"
+    },
+    {
+      "id": "AUTH-003",
+      "feature": "Authentication",
+      "scenario": "Empty sign-in form shows required-field validation",
+      "priority": "P2",
+      "preconditions": "OUT",
+      "testData": "Empty username and password",
+      "steps": [
+        "Open sign-in",
+        "Click Sign in without typing"
+      ],
+      "expected": "'This field is required' shown, username field focused, no navigation",
+      "classification": "Automate",
+      "reason": "Boundary/validation case; fast; no account needed",
+      "automatedTest": "tests/authentication/authentication.spec.ts"
+    },
+    {
+      "id": "AUTH-004",
+      "feature": "Authentication",
+      "scenario": "Sign-out ends the session; Back does not reopen the mailbox",
+      "priority": "P1",
+      "preconditions": "OUT; A",
+      "testData": "Account A",
+      "steps": [
+        "Sign in as A",
+        "Open account menu > Sign out",
+        "Press browser Back",
+        "Navigate directly to /u/0/inbox"
+      ],
+      "expected": "Sign-in page after sign-out, after Back, and after direct navigation; cached mail is never displayed",
+      "classification": "Automate",
+      "reason": "Session-termination security behaviour; state transition",
+      "automatedTest": "tests/authentication/authentication.spec.ts"
+    },
+    {
+      "id": "AUTH-005",
+      "feature": "Authentication",
+      "scenario": "Sign-in with 2FA (TOTP) enabled",
+      "priority": "P1",
+      "preconditions": "Account with TOTP 2FA",
+      "testData": "TOTP secret",
+      "steps": [
+        "Sign in with valid password",
+        "Enter TOTP code"
+      ],
+      "expected": "Mailbox opens only after a valid code; invalid code rejected",
+      "classification": "Manual / Exploratory",
+      "reason": "Needs a TOTP secret in the test environment; storing it in automation weakens the account's security. Candidate for automation only with a dedicated secrets vault",
+      "automatedTest": "-"
+    },
+    {
+      "id": "AUTH-006",
+      "feature": "Authentication",
+      "scenario": "Repeated failed sign-ins trigger human verification / rate limiting",
+      "priority": "P2",
+      "preconditions": "OUT",
+      "testData": "Wrong password x N",
+      "steps": [
+        "Submit wrong credentials repeatedly"
+      ],
+      "expected": "Proton throttles and presents human verification",
+      "classification": "Manual / Exploratory",
+      "reason": "Automating it would hammer a production service and must never attempt to bypass CAPTCHA",
+      "automatedTest": "-"
+    },
+    {
+      "id": "AUTH-007",
+      "feature": "Authentication",
+      "scenario": "Session revoked from another device signs this browser out",
+      "priority": "P2",
+      "preconditions": "A signed in on two browsers",
+      "testData": "Account A",
+      "steps": [
+        "Revoke session from Settings > Security on browser 2",
+        "Use mailbox on browser 1"
+      ],
+      "expected": "Browser 1 is signed out at next server call",
+      "classification": "Manual / Exploratory",
+      "reason": "Would invalidate cached sessions used by the rest of the suite; low regression frequency",
+      "automatedTest": "-"
+    },
+    {
+      "id": "COMP-001",
+      "feature": "Compose & send",
+      "scenario": "Two-account send: B receives with correct sender, subject and body",
+      "priority": "P0",
+      "preconditions": "A; B",
+      "testData": "Unique subject 'Automation Assessment [PMA-<run>] COMP-001 <rnd>' and body",
+      "steps": [
+        "A: Compose to B, enter subject and body",
+        "A: Send",
+        "A: Verify 'Message sent' and message in Sent",
+        "B: Wait for delivery to Inbox",
+        "B: Open message"
+      ],
+      "expected": "B sees A's address as sender, the exact subject and body",
+      "classification": "Automate",
+      "reason": "Core business journey end-to-end across two mailboxes",
+      "automatedTest": "tests/compose/compose.spec.ts"
+    },
+    {
+      "id": "COMP-002a",
+      "feature": "Compose & send",
+      "scenario": "Send blocked for a malformed recipient address",
+      "priority": "P1",
+      "preconditions": "A",
+      "testData": "Recipient 'not-an-email'",
+      "steps": [
+        "Compose with malformed recipient, subject, body",
+        "Click Send"
+      ],
+      "expected": "Invalid-address validation shown; composer stays open; no 'Message sent'",
+      "classification": "Automate",
+      "reason": "Negative validation; protects against silent mis-sends",
+      "automatedTest": "tests/compose/compose.spec.ts"
+    },
+    {
+      "id": "COMP-002b",
+      "feature": "Compose & send",
+      "scenario": "Send blocked when no recipient is given",
+      "priority": "P1",
+      "preconditions": "A",
+      "testData": "No recipient",
+      "steps": [
+        "Compose with subject and body only",
+        "Click Send"
+      ],
+      "expected": "Missing-recipient validation shown; composer stays open; nothing sent",
+      "classification": "Automate",
+      "reason": "Boundary (empty) case of the same rule, different validation branch",
+      "automatedTest": "tests/compose/compose.spec.ts"
+    },
+    {
+      "id": "COMP-003",
+      "feature": "Compose & send",
+      "scenario": "CC visible to recipients, BCC hidden",
+      "priority": "P1",
+      "preconditions": "A; B",
+      "testData": "To: B, CC: A, BCC: A+bcc alias",
+      "steps": [
+        "A: Compose with To, CC and BCC",
+        "A: Send",
+        "B: Open the delivered message header"
+      ],
+      "expected": "B sees A in CC; the BCC alias does not appear anywhere in B's header",
+      "classification": "Automate",
+      "reason": "Privacy-critical: a BCC leak is a high-impact defect",
+      "automatedTest": "tests/compose/compose.spec.ts"
+    },
+    {
+      "id": "COMP-004",
+      "feature": "Compose & send",
+      "scenario": "Password-protected email to an external recipient",
+      "priority": "P2",
+      "preconditions": "A; external mailbox",
+      "testData": "Password + hint",
+      "steps": [
+        "Compose to external address",
+        "Set password and hint",
+        "Send",
+        "Open link in external mailbox and decrypt"
+      ],
+      "expected": "Recipient needs the password; message decrypts correctly",
+      "classification": "Manual / Exploratory",
+      "reason": "Needs a non-Proton mailbox and link handling outside the app; better as a periodic exploratory check",
+      "automatedTest": "-"
+    },
+    {
+      "id": "COMP-005",
+      "feature": "Compose & send",
+      "scenario": "Subject/body boundaries: empty subject warning, very long subject, unicode/emoji",
+      "priority": "P3",
+      "preconditions": "A",
+      "testData": "'', 300-char subject, emoji text",
+      "steps": [
+        "Compose with each value",
+        "Send to self"
+      ],
+      "expected": "Empty subject prompts confirmation; long/unicode subjects preserved",
+      "classification": "Automate",
+      "reason": "Backlog: data-driven extension of COMP-001 (lower risk, deferred to keep suite at 20)",
+      "automatedTest": "-"
+    },
+    {
+      "id": "COMP-006",
+      "feature": "Compose & send",
+      "scenario": "Rich-text formatting renders consistently for the recipient",
+      "priority": "P3",
+      "preconditions": "A; B",
+      "testData": "Bold/list/link",
+      "steps": [
+        "Compose formatted message",
+        "Send",
+        "Inspect on B"
+      ],
+      "expected": "Formatting preserved",
+      "classification": "Not worth automating",
+      "reason": "Visual fidelity check; brittle in UI automation, better covered by component tests or manual review",
+      "automatedTest": "-"
+    },
+    {
+      "id": "DRAFT-001",
+      "feature": "Drafts",
+      "scenario": "Auto-save to Drafts without closing composer; persists after full reload",
+      "priority": "P1",
+      "preconditions": "A",
+      "testData": "Unique subject/body",
+      "steps": [
+        "Open composer, type subject and body (do not close)",
+        "Open Drafts",
+        "Reload the page",
+        "Reopen draft"
+      ],
+      "expected": "Draft listed while composer is still open; after reload it reopens with the same subject and body",
+      "classification": "Automate",
+      "reason": "Data-loss risk; tests true server-side auto-save, not just save-on-close",
+      "automatedTest": "tests/drafts/drafts.spec.ts"
+    },
+    {
+      "id": "DRAFT-002",
+      "feature": "Drafts",
+      "scenario": "Reopen, edit, reload, then send: draft moves from Drafts to Sent",
+      "priority": "P1",
+      "preconditions": "A",
+      "testData": "Unique subject; edit token",
+      "steps": [
+        "Create draft to self",
+        "Reopen, append edit, close",
+        "Reload, reopen",
+        "Send"
+      ],
+      "expected": "Edit persists across reload; after sending the draft is gone from Drafts and present in Sent",
+      "classification": "Automate",
+      "reason": "Full draft state transition (draft -> edited -> sent)",
+      "automatedTest": "tests/drafts/drafts.spec.ts"
+    },
+    {
+      "id": "DRAFT-003",
+      "feature": "Drafts",
+      "scenario": "Delete draft removes it permanently",
+      "priority": "P2",
+      "preconditions": "A",
+      "testData": "Unique subject",
+      "steps": [
+        "Create draft",
+        "Reopen and Delete draft (confirm)",
+        "Reload"
+      ],
+      "expected": "Draft not listed before or after reload",
+      "classification": "Automate",
+      "reason": "Destructive action must be final and server-side",
+      "automatedTest": "tests/drafts/drafts.spec.ts"
+    },
+    {
+      "id": "DRAFT-004",
+      "feature": "Drafts",
+      "scenario": "Draft with attachment keeps the attachment after reload",
+      "priority": "P2",
+      "preconditions": "A",
+      "testData": "test-data/attachment.txt",
+      "steps": [
+        "Compose, attach file, close",
+        "Reload, reopen draft"
+      ],
+      "expected": "Attachment still listed with the same name",
+      "classification": "Automate",
+      "reason": "Backlog: combines DRAFT-001 and ATT-001 building blocks; deferred to stay within 15-20 tests",
+      "automatedTest": "-"
+    },
+    {
+      "id": "DRAFT-005",
+      "feature": "Drafts",
+      "scenario": "Same draft edited concurrently in two tabs",
+      "priority": "P3",
+      "preconditions": "A in two tabs",
+      "testData": "-",
+      "steps": [
+        "Open same draft in two tabs",
+        "Edit both"
+      ],
+      "expected": "Conflict handled without silent data loss",
+      "classification": "Manual / Exploratory",
+      "reason": "Behaviour is not clearly specified; exploratory investigation gives more value",
+      "automatedTest": "-"
+    },
+    {
+      "id": "INBOX-001",
+      "feature": "Inbox & message actions",
+      "scenario": "Unread -> read on open -> mark unread",
+      "priority": "P1",
+      "preconditions": "A; B",
+      "testData": "Seeded message A -> B",
+      "steps": [
+        "Seed message to B",
+        "B: verify row is unread",
+        "B: open message",
+        "B: Mark as unread"
+      ],
+      "expected": "Row unread, then read after opening, then unread again",
+      "classification": "Automate",
+      "reason": "Most frequent user action; read state drives counters and notifications",
+      "automatedTest": "tests/inbox/inbox.spec.ts"
+    },
+    {
+      "id": "INBOX-002",
+      "feature": "Inbox & message actions",
+      "scenario": "Star / unstar updates Starred folder",
+      "priority": "P1",
+      "preconditions": "A; B",
+      "testData": "Seeded message",
+      "steps": [
+        "B: star message in Inbox",
+        "B: open Starred",
+        "B: unstar"
+      ],
+      "expected": "Message listed in Starred after starring and absent after unstarring",
+      "classification": "Automate",
+      "reason": "Verifies derived-folder state, not just icon toggle",
+      "automatedTest": "tests/inbox/inbox.spec.ts"
+    },
+    {
+      "id": "INBOX-003",
+      "feature": "Inbox & message actions",
+      "scenario": "Inbox -> Archive -> Trash -> restore to Inbox",
+      "priority": "P1",
+      "preconditions": "A; B",
+      "testData": "Seeded message",
+      "steps": [
+        "B: Archive",
+        "B: from Archive move to Trash",
+        "B: from Trash move to Inbox"
+      ],
+      "expected": "After every move the message is in exactly the target folder and absent from the source",
+      "classification": "Automate",
+      "reason": "State-transition coverage of all core move actions incl. restore",
+      "automatedTest": "tests/inbox/inbox.spec.ts"
+    },
+    {
+      "id": "INBOX-004",
+      "feature": "Inbox & message actions",
+      "scenario": "Bulk select and move several messages",
+      "priority": "P2",
+      "preconditions": "A; B; >=3 seeded messages",
+      "testData": "3 unique subjects",
+      "steps": [
+        "Select 3 rows",
+        "Move to Archive"
+      ],
+      "expected": "All 3 moved, none left behind",
+      "classification": "Automate",
+      "reason": "Backlog: needs 3 deliveries per run (slow); single-message moves already cover the action logic",
+      "automatedTest": "-"
+    },
+    {
+      "id": "FOLDER-001",
+      "feature": "Folders & labels",
+      "scenario": "Create custom folder, move message into it, delete folder",
+      "priority": "P2",
+      "preconditions": "A",
+      "testData": "Folder 'PMA <run>'",
+      "steps": [
+        "Create folder",
+        "Move message",
+        "Delete folder"
+      ],
+      "expected": "Message listed in folder; folder removal handled",
+      "classification": "Automate",
+      "reason": "Backlog: free plan folder limits make cleanup mandatory; next candidate after current 20",
+      "automatedTest": "-"
+    },
+    {
+      "id": "LABEL-001",
+      "feature": "Folders & labels",
+      "scenario": "Apply and remove a label",
+      "priority": "P2",
+      "preconditions": "A",
+      "testData": "Label 'PMA <run>'",
+      "steps": [
+        "Create label",
+        "Apply to message",
+        "Remove label"
+      ],
+      "expected": "Message listed under label only while applied",
+      "classification": "Automate",
+      "reason": "Backlog, same reasoning as FOLDER-001",
+      "automatedTest": "-"
+    },
+    {
+      "id": "SEARCH-001",
+      "feature": "Search",
+      "scenario": "Keyword search returns exactly the match; clear restores folder view",
+      "priority": "P1",
+      "preconditions": "A; B",
+      "testData": "Unique token in subject",
+      "steps": [
+        "Seed message with token",
+        "B: search token",
+        "B: clear search"
+      ],
+      "expected": "Exactly one result with the subject; URL holds keyword; after clear the keyword is gone and Inbox lists the message",
+      "classification": "Automate",
+      "reason": "Primary retrieval path; exact-result assertion catches over- and under-matching",
+      "automatedTest": "tests/search/search.spec.ts"
+    },
+    {
+      "id": "SEARCH-002",
+      "feature": "Search",
+      "scenario": "Advanced search: keyword AND sender (plus no-result case)",
+      "priority": "P1",
+      "preconditions": "A; B",
+      "testData": "Same token in two messages from A and from B",
+      "steps": [
+        "Seed message A->B and B->B with same token",
+        "B: advanced search keyword + From=A",
+        "B: advanced search keyword + From=unknown"
+      ],
+      "expected": "Only A's message returned; unknown sender gives 'No results'",
+      "classification": "Automate",
+      "reason": "Multi-condition search with discriminating data proves the AND logic; includes no-result behaviour",
+      "automatedTest": "tests/search/search.spec.ts"
+    },
+    {
+      "id": "SEARCH-003",
+      "feature": "Search",
+      "scenario": "Date-range search",
+      "priority": "P3",
+      "preconditions": "Messages of known ages",
+      "testData": "Historic mailbox",
+      "steps": [
+        "Search with start/end dates"
+      ],
+      "expected": "Only messages inside range",
+      "classification": "Manual / Exploratory",
+      "reason": "Needs aged data that cannot be created on demand through the UI",
+      "automatedTest": "-"
+    },
+    {
+      "id": "SEARCH-004",
+      "feature": "Search",
+      "scenario": "Body content search with client-side index enabled",
+      "priority": "P3",
+      "preconditions": "Content search enabled",
+      "testData": "Body-only token",
+      "steps": [
+        "Enable message content search",
+        "Search body token"
+      ],
+      "expected": "Message found by body text",
+      "classification": "Manual / Exploratory",
+      "reason": "Requires building a local encrypted index (slow, device-specific)",
+      "automatedTest": "-"
+    },
+    {
+      "id": "FILTER-001",
+      "feature": "Filters",
+      "scenario": "Subject filter moves matching mail to Archive; non-matching stays in Inbox",
+      "priority": "P1",
+      "preconditions": "A; B; no other suite filter",
+      "testData": "Filter 'PMA filter [PMA-<run>] <token>', subject contains <token>",
+      "steps": [
+        "B: create filter (subject contains token -> Archive)",
+        "A: send matching and non-matching mail",
+        "B: check Inbox and Archive",
+        "Delete filter (cleanup)"
+      ],
+      "expected": "Matching message only in Archive; non-matching in Inbox; filter removed afterwards",
+      "classification": "Automate",
+      "reason": "Rule behaviour validated with both matching and non-matching data",
+      "automatedTest": "tests/filters/filters.spec.ts"
+    },
+    {
+      "id": "FILTER-002",
+      "feature": "Filters",
+      "scenario": "Disabled filter no longer applies; edit changes behaviour",
+      "priority": "P2",
+      "preconditions": "B with filter",
+      "testData": "As FILTER-001",
+      "steps": [
+        "Disable filter",
+        "Send matching mail",
+        "Re-enable/edit"
+      ],
+      "expected": "Disabled filter has no effect",
+      "classification": "Automate",
+      "reason": "Backlog: adds two more deliveries; free plan allows a single filter so runs must be serial",
+      "automatedTest": "-"
+    },
+    {
+      "id": "FILTER-003",
+      "feature": "Filters",
+      "scenario": "Sieve (advanced) filter syntax",
+      "priority": "P3",
+      "preconditions": "Paid plan",
+      "testData": "Sieve script",
+      "steps": [
+        "Create Sieve filter"
+      ],
+      "expected": "Valid scripts saved, invalid rejected",
+      "classification": "Not worth automating",
+      "reason": "Paid feature; syntax validation is cheaper to test below the UI",
+      "automatedTest": "-"
+    },
+    {
+      "id": "ATT-001",
+      "feature": "Attachments",
+      "scenario": "Upload, send and receive an attachment with the same file name",
+      "priority": "P1",
+      "preconditions": "A; B",
+      "testData": "test-data/attachment.txt",
+      "steps": [
+        "A: compose to B, attach file",
+        "Wait for upload to finish",
+        "Send",
+        "B: open message"
+      ],
+      "expected": "Composer lists the file; message in Sent; B sees attachment 'attachment.txt'",
+      "classification": "Automate",
+      "reason": "Attachments are encrypted client-side - high-risk path",
+      "automatedTest": "tests/attachments/attachments.spec.ts"
+    },
+    {
+      "id": "ATT-002",
+      "feature": "Attachments",
+      "scenario": "Remove attachment before sending",
+      "priority": "P2",
+      "preconditions": "A",
+      "testData": "attachment.txt",
+      "steps": [
+        "Attach",
+        "Remove",
+        "Send"
+      ],
+      "expected": "Received message has no attachment",
+      "classification": "Automate",
+      "reason": "Backlog",
+      "automatedTest": "-"
+    },
+    {
+      "id": "ATT-003",
+      "feature": "Attachments",
+      "scenario": "Attachment over the size limit is rejected",
+      "priority": "P2",
+      "preconditions": "A",
+      "testData": ">25 MB file",
+      "steps": [
+        "Attach oversized file"
+      ],
+      "expected": "Clear size-limit error; nothing uploaded",
+      "classification": "Manual / Exploratory",
+      "reason": "Uploading large encrypted files is slow and bandwidth-heavy for every run",
+      "automatedTest": "-"
+    },
+    {
+      "id": "ATT-004",
+      "feature": "Attachments",
+      "scenario": "Download received attachment and verify content",
+      "priority": "P2",
+      "preconditions": "As ATT-001",
+      "testData": "attachment.txt",
+      "steps": [
+        "B: download attachment",
+        "Compare checksum"
+      ],
+      "expected": "Downloaded file identical to original",
+      "classification": "Automate",
+      "reason": "Backlog: preview/download UX varies by file type; to be added once the download control is confirmed",
+      "automatedTest": "-"
+    },
+    {
+      "id": "ASYNC-001",
+      "feature": "Asynchronous workflows",
+      "scenario": "Undo Send: transient undo state, restored composer, final send after window",
+      "priority": "P1",
+      "preconditions": "A; Undo-send window > 0 (default)",
+      "testData": "Unique subject",
+      "steps": [
+        "Compose and Send",
+        "Click Undo in the toast",
+        "Verify composer content and Sent folder",
+        "Send again and let the undo window expire"
+      ],
+      "expected": "Undo restores the composer and nothing is in Sent; after the window closes the message is in Sent",
+      "classification": "Automate",
+      "reason": "Timing-dependent flow synchronised on observable states, not sleeps",
+      "automatedTest": "tests/async/async.spec.ts"
+    },
+    {
+      "id": "ASYNC-002",
+      "feature": "Asynchronous workflows",
+      "scenario": "Schedule send for tomorrow, verify Scheduled state, cancel via Edit",
+      "priority": "P2",
+      "preconditions": "A",
+      "testData": "Unique subject",
+      "steps": [
+        "Compose to self",
+        "Schedule 'Tomorrow'",
+        "Open Scheduled folder and message",
+        "Edit (cancel schedule)"
+      ],
+      "expected": "Message in Scheduled with banner; after Edit it is a draft and no longer scheduled",
+      "classification": "Automate",
+      "reason": "Covers scheduled state without waiting for real time to pass",
+      "automatedTest": "tests/async/async.spec.ts"
+    },
+    {
+      "id": "ASYNC-003",
+      "feature": "Asynchronous workflows",
+      "scenario": "Scheduled message is actually delivered at the scheduled time",
+      "priority": "P2",
+      "preconditions": "A; B",
+      "testData": "Schedule +N minutes",
+      "steps": [
+        "Schedule send",
+        "Wait until delivery time"
+      ],
+      "expected": "Delivered at (not before) scheduled time",
+      "classification": "Manual / Exploratory",
+      "reason": "Long-running wall-clock test; belongs in a nightly job using API-level scheduling with a short custom time or a controllable clock",
+      "automatedTest": "-"
+    },
+    {
+      "id": "UX-001",
+      "feature": "Cross-cutting",
+      "scenario": "Visual layout, themes and responsive breakpoints",
+      "priority": "P3",
+      "preconditions": "A",
+      "testData": "-",
+      "steps": [
+        "Review UI at several viewports and themes"
+      ],
+      "expected": "No visual breakage",
+      "classification": "Not worth automating",
+      "reason": "Pixel comparisons against a frequently changing production UI produce noise, not signal",
+      "automatedTest": "-"
+    },
+    {
+      "id": "A11Y-001",
+      "feature": "Cross-cutting",
+      "scenario": "Keyboard navigation and screen-reader labels",
+      "priority": "P2",
+      "preconditions": "A",
+      "testData": "-",
+      "steps": [
+        "Navigate mailbox and composer by keyboard / screen reader"
+      ],
+      "expected": "All actions reachable and announced",
+      "classification": "Manual / Exploratory",
+      "reason": "Human judgement needed; could later add automated axe scans as a separate layer",
+      "automatedTest": "-"
+    }
+  ]
+}

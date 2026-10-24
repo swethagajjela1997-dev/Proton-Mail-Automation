@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Secrets & authentication state - NEVER commit
+.env
+.env.*
+!.env.example
+.auth/
+*.storageState.json
+
+# Playwright default output folders
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+
+# Generated run artifacts (regenerate with `npm test`)
+reports/html/*
+reports/screenshots/*
+reports/traces/*
+reports/videos/*
+reports/test-results/*
+reports/logs/*
+reports/results.json
+reports/allure-results/
+reports/allure-report/
+reports/preflight.json
+!reports/**/.gitkeep
+# The final summary is deliberately committed as the submitted test report
+!reports/Final_Execution_Summary.md
+
+# OS / editor / temp
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+*.tmp
+~$*.xlsx
